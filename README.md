@@ -8,6 +8,3 @@ https://fr.wikipedia.org/wiki/Ricochet_Robots
 # Installation
 
 `git pull https://github.com/ClearwaterTM/ricochetrobots `
-
-# Compilation
-
