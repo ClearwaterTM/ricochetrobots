@@ -1,66 +1,67 @@
 package model;
+import java.util.*; //We'll need this for HashMaps
 
-/**
- * <b>Case est la classe utlisee pour representer les cases du champ de bataille</b>
+public class Case {
 
- * @author Elodie RATOVOHERINJANAHARY, Pierre ROYER, Daniel MURRAY , Adrien KNELL
- */
+	public HashMap<String,Boolean> wallLocations = new HashMap<String,Boolean>();
+	public String caseType = "-";
+	
+	public String calculateWalls()
+	{
+		//An idea of wall representation: Use different numbers for different combinations. NESW
+		//a - North
+		//b - East
+		//c - South
+		//d - West
+		//e - North+West
+		//f - North+East
+		//g - North+South
+		//h - South+East
+		//i - South+West
+		//j - East+West
+		
+		boolean north = this.wallLocations.get("NorthWall");
+		boolean south = this.wallLocations.get("SouthWall");
+		boolean east = this.wallLocations.get("EastWall");
+		boolean west = this.wallLocations.get("WestWall");
+		
+		//Multiple walls have higher priority due to how comparaison works.
+		//NOTE - Multiple walls are only used around 
+		
+		//For the center
+		if (north && south && east && west) {return "O";}
+		
+		if (north && west) {return "e";}
+		if (north && east) {return "f";}
+		if (north && south) {return "g";}
+		if (south && east) {return "h";}
+		if (south && west) {return "i";}
+		if (east && west) {return "j";}
+		
+		if (north){return "a";}
+		if (east){return "b";}
+		if (south){return "c";}
+		if (west){return "d";}
+		
 
-public class Case extends AbstractListenableModel{
-	
-	/**
-     * 	<b> instance de Bomb qui indique si la case a ete touchee ou non par un tir. </b>
-     */
-	public Bomb touched = null;
-	
-	/**
-     * 	<b> Une instance de Coords qui indique la position de la case </b>
-     */
-	public Coords position;
-	
-	/**
-     * 	<b> instance de Boat pour savoir quel bateau est sur la case </b>
-     */
-	public Boat presenceBoat = null;
-	
-	/**
-     * 	<b>Constructeur de la classe  </b>
-     *
-     * <p>Initialise la position de la case.</p>
-     *
-     * @param position
-     * 			La position de la case dans le champ de bataille.
-     */
-	public Case(Coords position) {
-		this.position = position;
+		
+		//If the square doesn't have any walls
+		else
+			{return "-";}
 	}
 	
-	
-	/**
-	 * 	<b>Assigne a la variable presenceBoat l'instance de Boat mis en argument</b>
-	 * @param b
-	 * 			Le bateau a assigner.
-	 */
-	public void placerbateau(Boat b){
-		this.presenceBoat = b;
+	//NSWE
+	public Case(boolean nWall, boolean sWall, boolean wWall, boolean eWall)
+	{
+		wallLocations.put("NorthWall", nWall);
+		wallLocations.put("SouthWall", sWall);
+		wallLocations.put("WestWall", wWall);
+		wallLocations.put("EastWall", eWall);
+		this.caseType = this.calculateWalls();
 	}
-	
-	/**
-	 * 	<b>Assure le fait que la case ai ete touchee et modifie les variables en consequence.</b>
-	 * <p>Des qu'une case est touchee par un tir, on appelle cette methode.</p>
-	 *
-	 */
-	public void viser(Bomb a) {
-		if(this.touched == null) {
-			this.touched = a;
-			if(this.presenceBoat != null) {
-				this.presenceBoat.nbrHits += 1;
-				this.presenceBoat.checkLife();
-			}
-			fireChange();
-		}
+	public Case()
+	{
+		this(false,false,false,false);
 	}
-	
-	
-	
 }
+
